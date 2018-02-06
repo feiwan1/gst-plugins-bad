@@ -198,11 +198,19 @@ else
 check_shm=
 endif
 
+if USE_MSDK
+check_msdk=elements/msdkh264enc
+else
+check_ipcpipeline=
+endif
+
+
 if USE_IPCPIPELINE
 check_ipcpipeline=pipelines/ipcpipeline
 else
 check_ipcpipeline=
 endif
+
 
 VALGRIND_TO_FIX = \
 	elements/mpeg2enc \
@@ -284,6 +292,7 @@ check_PROGRAMS = \
 	$(check_hlsdemux) \
 	$(check_srtp) \
 	$(check_player) \
+	$(check_msdk) \
 	$(EXPERIMENTAL_CHECKS)
 
 noinst_HEADERS = elements/mxfdemux.h libs/isoff.h
@@ -490,6 +499,11 @@ libs_player_LDADD = \
 libs_player_CFLAGS = \
 	$(GST_PLUGINS_BAD_CFLAGS) $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS) $(AM_CFLAGS) \
 	-DTEST_PATH=\"$(builddir)/media\"
+
+elements_msdk_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(AM_CFLAGS)
+elements_msdk_LDADD = $(GST_PLUGINS_BASE_LIBS) $(GST_VIDEO_LIBS) $(GST_BASE_LIBS) $(LDADD)
+elements_msdk_SOURCES = elements/msdkh264enc.c
+
 
 if WITH_GST_PLAYER_TESTS
 PLAYER_MEDIA_FILES = \
